@@ -3,7 +3,6 @@ class_name BonionFileUtils extends GDScript
 static var _SAVEFOLDERNAME    : String = "BonionFileUtils_saves"
 static var _SAVEFOLDERPATH    : String = "user://" + _SAVEFOLDERNAME
 static var _SAVEFILEPATH      : String = _SAVEFOLDERPATH + "/"
-var file                      : FileAccess
 
 func check_all() -> void:
 	check_dir(_DIRTYPE.LOG)
@@ -83,6 +82,7 @@ var FILENAMEDICT : Dictionary = {
 ## @experimental
 func add_log_new(contents : String, severity : int, filename : String) -> void:
 	check_dir(_DIRTYPE.LOG)
+	var file : FileAccess
 	if FileAccess.file_exists(_LOGFILESPATH + ".log"):
 		file = FileAccess.open(_LOGFILESPATH + ".log",FileAccess.READ_WRITE)
 		file.seek_end()
