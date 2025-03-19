@@ -45,10 +45,13 @@ static func check_dir(which : int) -> int:
 
 
 #region Logging
-const _LOGFOLDERNAME     : String = "BonionFileUtils_logs"
-const _LOGFOLDERPATH     : String = "user://" + _LOGFOLDERNAME
-const _LOGFILESPATH      : String = _LOGFOLDERPATH + "/"
-var _MAXLOGFILES         : int    = 5
+const _LOGFOLDERNAME              : String = "BonionFileUtils_logs"
+const _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
+const _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
+static var   _MAXLOGFILES         : int    = 5
+
+func setMAXLOGFILES(number : int) -> void:
+	_MAXLOGFILES = number
 
 enum LOGSEVERITY {
 	## Every event that occurs frequently or recursively
