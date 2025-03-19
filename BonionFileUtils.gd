@@ -96,7 +96,7 @@ func add_log_new(contents : String, severity : int, filename : String) -> void:
 		return
 	file.store_string(str(Time.get_ticks_msec()) + "|")
 	file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
-	file.store_string(LOGSEVERITYDICT.get(severity) + "|")
+	file.store_string(_LOGSEVERITYDICT.get(severity) + "|")
 	file.store_string(contents)
 	file.store_string("\n")
 	file.close()
