@@ -64,7 +64,7 @@ enum LOGSEVERITY {
 	## An event that stops the game from working or requires immediate action. Usually preludes the closing of the game.
 	ERROR
 }
-var LOGSEVERITYDICT : Dictionary = {
+var _LOGSEVERITYDICT : Dictionary = {
 	LOGSEVERITY.DEBUG   : "DEBUG",
 	LOGSEVERITY.INFO    : "INFO",
 	LOGSEVERITY.WARNING : "WARNING",
@@ -83,11 +83,14 @@ var FILENAMEDICT : Dictionary = {
 func add_log_new(contents : String, severity : int, filename : String) -> void:
 	check_dir(_DIRTYPE.LOG)
 	var file : FileAccess
+	var path : String
 	if FileAccess.file_exists(_LOGFILESPATH + ".log"):
-		file = FileAccess.open(_LOGFILESPATH + ".log",FileAccess.READ_WRITE)
+		path = _LOGFILESPATH + ".log"
+		file = FileAccess.open(path,FileAccess.READ_WRITE)
 		file.seek_end()
 	else:
-		file = FileAccess.open(_LOGFILESPATH + filename + ".log",FileAccess.WRITE)
+		path = _LOGFILESPATH + filename + ".log"
+		file = FileAccess.open(path,FileAccess.WRITE)
 	if file == null:
 		OS.alert("logging error")
 		return
