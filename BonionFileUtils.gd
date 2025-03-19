@@ -92,7 +92,7 @@ func add_log_new(contents : String, severity : int, filename : String) -> void:
 		path = _LOGFILESPATH + filename + ".log"
 		file = FileAccess.open(path,FileAccess.WRITE)
 	if file == null:
-		OS.alert("logging error")
+		printerr("BonionFileUtils could not write to " + path)
 		return
 	file.store_string(str(Time.get_ticks_msec()) + "|")
 	file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
