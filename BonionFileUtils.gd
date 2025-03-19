@@ -73,27 +73,31 @@ var _LOGSEVERITYDICT : Dictionary = {
 }
 
 ## @experimental
-func add_log_new(contents : String, severity : int, filename : String) -> void:
-	check_dir(_DIRTYPE.LOG)
+func add_log(contents : String, severity : int) -> void:
 	var file : FileAccess
-	var path : String
-	if FileAccess.file_exists(_LOGFILESPATH + ".log"):
-		path = _LOGFILESPATH + ".log"
-		file = FileAccess.open(path,FileAccess.READ_WRITE)
-		file.seek_end()
-	else:
-		path = _LOGFILESPATH + filename + ".log"
-		file = FileAccess.open(path,FileAccess.WRITE)
+	var path : String = _LOGFILESPATH + "latest.log"
+	if FileAccess.file_exists(path):
+		_sortlogs()
+	file = FileAccess.open(path,FileAccess.WRITE)
 	if file == null:
 		printerr("BonionFileUtils could not write to " + path)
 		return
-	file.store_string(str(Time.get_ticks_msec()) + "|")
-	file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
-	file.store_string(_LOGSEVERITYDICT.get(severity) + "|")
-	file.store_string(contents)
-	file.store_string("\n")
+	else:
+		file.store_string(str(Time.get_ticks_msec()) + "|")
+		file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
+		file.store_string(_LOGSEVERITYDICT.get(severity) + "|")
+		file.store_string(contents)
+		file.store_string("\n")
 	file.close()
 
+func _sortlogs() -> void:
+	var files : PackedStringArray = DirAccess.get_files_at(_LOGFILESPATH)
+	var pathtolatest : String = _LOGFILESPATH + "latest.log"
+	if files.size() > 0 and files.has("latest.log"):
+		DirAccess.rename_absolute(pathtolatest, _LOGFILESPATH + Time.get_time_string_from_unix_time(FileAccess.get_modified_time(pathtolatest)))
+	files = DirAccess.get_files_at(_LOGFILESPATH)
+	if files.size() > 4:
+		DirAccess.remove_absolute(_LOGFILESPATH + files[files.size()-1])
 #endregion
 
 
