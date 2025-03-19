@@ -72,13 +72,6 @@ var _LOGSEVERITYDICT : Dictionary = {
 	LOGSEVERITY.ERROR   : "ERROR",
 }
 
-enum FILENAME {
-	
-}
-var FILENAMEDICT : Dictionary = {
-	
-}
-
 ## @experimental
 func add_log_new(contents : String, severity : int, filename : String) -> void:
 	check_dir(_DIRTYPE.LOG)
