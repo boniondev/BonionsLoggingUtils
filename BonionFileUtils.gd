@@ -4,10 +4,46 @@ static var _SAVEFOLDERNAME    : String = "BonionFileUtils_saves"
 static var _SAVEFOLDERPATH    : String = "user://" + _SAVEFOLDERNAME
 static var _SAVEFILEPATH      : String = _SAVEFOLDERPATH + "/"
 
+static var _PERSISTENTPATH : String = "user://persistent.bonion"
+
 func check_all() -> void:
 	check_dir(_DIRTYPE.LOG)
 	check_dir(_DIRTYPE.CONFIG)
 
+enum MODE {
+	SAVE,
+	LOG,
+	CONFIG,
+}
+
+func _init(mode : int) -> void:
+	match mode:
+		MODE.SAVE:
+			pass
+		MODE.LOG:
+			var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE)
+			if persistentfile != null:
+				var notfound : bool = true
+				while persistentfile.get_position() < persistentfile.get_length():
+					# I found something, is it a dictionary?
+					var dict : = persistentfile.get_var() as Dictionary
+					if dict:
+						# It's a dictionary, but is it the right one?
+						if dict.get("NAME") == "LOG":
+							# It's the right one! I grab what I need, or use a default value
+							_MAXLOGFILES = dict.get_or_add("MAXLOGFILES", 5)
+							notfound = false
+							break # I stop looking
+				# If I haven't found it still, I make it
+				if notfound:
+					var dict : Dictionary = {
+						"NAME"        : "LOG",
+						"MAXLOGFILES" :     5,
+					}
+					persistentfile.store_var(dict)
+			persistentfile.close()
+		MODE.CONFIG:
+			pass
 
 #region Directory creation and checking
 
@@ -17,7 +53,7 @@ enum _DIRTYPE{
 	CONFIG
 }
 
-static func make_dir(path : String) -> int:
+func make_dir(path : String) -> int:
 	var err : int = DirAccess.make_dir_absolute(path)
 	if err != OK:
 		printerr("BonionFileUtils could not create directory " + path)
@@ -26,7 +62,7 @@ static func make_dir(path : String) -> int:
 		return OK
 
 
-static func check_dir(which : int) -> int:
+func check_dir(which : int) -> int:
 	var path : String
 	match which:
 		_DIRTYPE.SAVE:
@@ -47,7 +83,7 @@ static func check_dir(which : int) -> int:
 const _LOGFOLDERNAME              : String = "BonionFileUtils_logs"
 const _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
 const _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
-static var   _MAXLOGFILES         : int    = 5
+var  _MAXLOGFILES               : int    = 5
 
 func setMAXLOGFILES(number : int) -> void:
 	_MAXLOGFILES = number
