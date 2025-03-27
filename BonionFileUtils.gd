@@ -4,7 +4,7 @@ static var _SAVEFOLDERNAME    : String = "BonionFileUtils_saves"
 static var _SAVEFOLDERPATH    : String = "user://" + _SAVEFOLDERNAME
 static var _SAVEFILEPATH      : String = _SAVEFOLDERPATH + "/"
 
-static var _PERSISTENTPATH : String = "user://persistent.bonion"
+const _PERSISTENTPATH  : String = "user://persistent.bonion"
 
 func check_all() -> void:
 	check_dir(_DIRTYPE.LOG)
