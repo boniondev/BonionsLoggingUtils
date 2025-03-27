@@ -5,6 +5,12 @@ static var _SAVEFOLDERPATH    : String = "user://" + _SAVEFOLDERNAME
 static var _SAVEFILEPATH      : String = _SAVEFOLDERPATH + "/"
 
 const _PERSISTENTPATH  : String = "user://persistent.bonion"
+var _file              : FileAccess
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		if _file != null:
+			_file.close()
 
 func check_all() -> void:
 	check_dir(_DIRTYPE.LOG)
@@ -110,21 +116,19 @@ var _LOGSEVERITYDICT : Dictionary = {
 
 ## @experimental
 func add_log(contents : String, severity : int) -> void:
-	var file : FileAccess
 	var path : String = _LOGFILESPATH + "latest.log"
 	if FileAccess.file_exists(path):
 		_sortlogs()
-	file = FileAccess.open(path,FileAccess.WRITE)
-	if file == null:
+	_file = FileAccess.open(path,FileAccess.WRITE)
+	if _file == null:
 		printerr("BonionFileUtils could not write to " + path)
 		return
 	else:
-		file.store_string(str(Time.get_ticks_msec()) + "|")
-		file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
-		file.store_string(_LOGSEVERITYDICT.get(severity) + "|")
-		file.store_string(contents)
-		file.store_string("\n")
-	file.close()
+		_file.store_string(str(Time.get_ticks_msec()) + "|")
+		_file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
+		_file.store_string(_LOGSEVERITYDICT.get(severity) + "|")
+		_file.store_string(contents)
+		_file.store_string("\n")
 
 func _sortlogs() -> void:
 	var files : PackedStringArray = DirAccess.get_files_at(_LOGFILESPATH)
