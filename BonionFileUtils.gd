@@ -94,16 +94,17 @@ var  _MAXLOGFILES               : int    = 5
 func setMAXLOGFILES(number : int) -> void:
 	_MAXLOGFILES = number
 
+## Varying levels of log severities, along with guidelines as to how and when to use them.
 enum LOGSEVERITY {
-	## Every event that occurs frequently or recursively
+	## Events that occurs frequently or recursively
 	DEBUG,
-	## An event that is useful to log but doesn't happen often, I.E one time signal emits
+	## Events that are useful to log but don't happen often
 	INFO,
-	## An event that was not supposed to happen, but doesn't affect the game in any way
+	## Events that were not supposed to happen, but don't affect the game in any way
 	WARNING,
-	## An event that affects things under the hood and may or may not cause problems
+	## Events that may or may not affect the proper execution of the game
 	ALERT,
-	## An event that stops the game from working or requires immediate action. Usually preludes the closing of the game.
+	## Catastrophic events that stop the execution of the game in its tracks. Use this to inform yourself or the player what went wrong if you make it so the game closes 
 	ERROR
 }
 var _LOGSEVERITYDICT : Dictionary = {
