@@ -120,7 +120,8 @@ func add_log(contents : String, severity : int) -> void:
 	var path : String = _LOGFILESPATH + "latest.log"
 	if FileAccess.file_exists(path):
 		_sortlogs()
-	_file = FileAccess.open(path,FileAccess.WRITE)
+	if _file == null:
+		_file = FileAccess.open(path,FileAccess.WRITE)
 	if _file == null:
 		printerr("BonionFileUtils could not write to " + path)
 		return
