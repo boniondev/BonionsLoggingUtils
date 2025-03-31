@@ -9,7 +9,7 @@ var _file              : FileAccess
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		if _file != null:
+		if _file != null and _AUTOSAVEONEXIT:
 			_file.close()
 
 func check_all() -> void:
@@ -39,12 +39,14 @@ func _init(mode : int) -> void:
 							# It's the right one! I grab what I need, or use a default value
 							_MAXLOGFILES = dict.get_or_add("MAXLOGFILES", 5)
 							notfound = false
+							_AUTOSAVEONEXIT = dict.get_or_add("AUTOSAVEONEXIT", true)
 							break # I stop looking
 				# If I haven't found it still, I make it
 				if notfound:
 					var dict : Dictionary = {
-						"NAME"        : "LOG",
-						"MAXLOGFILES" :     5,
+						"NAME"          : "LOG",
+						"MAXLOGFILES"   :     5,
+						"AUTOSAVEONEXIT":  true,
 					}
 					persistentfile.store_var(dict)
 			persistentfile.close()
@@ -86,10 +88,11 @@ func check_dir(which : int) -> int:
 
 
 #region Logging
-const _LOGFOLDERNAME              : String = "BonionFileUtils_logs"
-const _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
-const _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
-var  _MAXLOGFILES               : int    = 5
+const      _LOGFOLDERNAME              : String = "BonionFileUtils_logs"
+const      _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
+const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
+var        _MAXLOGFILES                : int    = 5
+static var _AUTOSAVEONEXIT             : bool
 
 func setMAXLOGFILES(number : int) -> void:
 	_MAXLOGFILES = number
@@ -114,6 +117,19 @@ var _LOGSEVERITYDICT : Dictionary = {
 	LOGSEVERITY.ALERT   : "ALERT",
 	LOGSEVERITY.ERROR   : "ERROR",
 }
+
+## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish. Remember to use [method save_log] if you disable autosaving
+func setAUTOSAVE(value : bool) -> bool:
+	_AUTOSAVEONEXIT = value
+	return _AUTOSAVEONEXIT
+
+## Writes the current log buffer to disk. You don't need to call this method unless you turn off autosave.
+func save_log() -> bool:
+	if _file != null:
+		_file.flush()
+		return true
+	else:
+		return false
 
 ## @experimental
 func add_log(contents : String, severity : int) -> void:
