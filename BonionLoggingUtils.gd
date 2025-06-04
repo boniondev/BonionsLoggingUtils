@@ -1,8 +1,4 @@
-class_name BonionFileUtils extends GDScript
-
-static var _SAVEFOLDERNAME    : String = "BonionFileUtils_saves"
-static var _SAVEFOLDERPATH    : String = "user://" + _SAVEFOLDERNAME
-static var _SAVEFILEPATH      : String = _SAVEFOLDERPATH + "/"
+class_name BonionLoggingUtils extends GDScript
 
 const _PERSISTENTPATH  : String = "user://persistent.bonion"
 var _file              : FileAccess
@@ -12,54 +8,28 @@ func _notification(what: int) -> void:
 		if _file != null and _AUTOSAVEONEXIT:
 			_file.close()
 
-func check_all() -> void:
-	check_dir(_DIRTYPE.LOG)
-	check_dir(_DIRTYPE.CONFIG)
-
-enum MODE {
-	SAVE,
-	LOG,
-	CONFIG,
-}
-
-func _init(mode : int) -> void:
-	match mode:
-		MODE.SAVE:
-			pass
-		MODE.LOG:
-			var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE)
-			if persistentfile != null:
-				var notfound : bool = true
-				while persistentfile.get_position() < persistentfile.get_length():
-					# I found something, is it a dictionary?
-					var dict : = persistentfile.get_var() as Dictionary
-					if dict:
-						# It's a dictionary, but is it the right one?
-						if dict.get("NAME") == "LOG":
-							# It's the right one! I grab what I need, or use a default value
-							_MAXLOGFILES = dict.get_or_add("MAXLOGFILES", 5)
-							notfound = false
-							_AUTOSAVEONEXIT = dict.get_or_add("AUTOSAVEONEXIT", true)
-							break # I stop looking
-				# If I haven't found it still, I make it
-				if notfound:
-					var dict : Dictionary = {
-						"NAME"          : "LOG",
-						"MAXLOGFILES"   :     5,
-						"AUTOSAVEONEXIT":  true,
-					}
-					persistentfile.store_var(dict)
-			persistentfile.close()
-		MODE.CONFIG:
-			pass
+func _init() -> void:
+	var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE)
+	if persistentfile != null:
+		var notfound : bool = true
+		while persistentfile.get_position() < persistentfile.get_length():
+			var dict : = persistentfile.get_var() as Dictionary
+			if dict:
+				if dict.get("NAME") == "LOG":
+					_MAXLOGFILES = dict.get_or_add("MAXLOGFILES", 5)
+					notfound = false
+					_AUTOSAVEONEXIT = dict.get_or_add("AUTOSAVEONEXIT", true)
+					break
+		if notfound:
+			var dict : Dictionary = {
+				"NAME"          : "LOG",
+				"MAXLOGFILES"   :     5,
+				"AUTOSAVEONEXIT":  true,
+			}
+			persistentfile.store_var(dict)
+	persistentfile.close()
 
 #region Directory creation and checking
-
-enum _DIRTYPE{
-	SAVE,
-	LOG,
-	CONFIG
-}
 
 func make_dir(path : String) -> int:
 	var err : int = DirAccess.make_dir_absolute(path)
@@ -70,18 +40,10 @@ func make_dir(path : String) -> int:
 		return OK
 
 
-func check_dir(which : int) -> int:
-	var path : String
-	match which:
-		_DIRTYPE.SAVE:
-			path = _SAVEFOLDERPATH
-		_DIRTYPE.LOG:
-			path = _LOGFOLDERPATH
-		_DIRTYPE.CONFIG:
-			path = _CONFIGFOLDERPATH
-	var exists : bool = DirAccess.dir_exists_absolute(path)
+func check_dir() -> int:
+	var exists : bool = DirAccess.dir_exists_absolute(_LOGFOLDERPATH)
 	if !exists:
-		return make_dir(path)
+		return make_dir(_LOGFOLDERPATH)
 	else:
 		return OK
 #endregion
@@ -156,15 +118,4 @@ func _sortlogs() -> void:
 	files = DirAccess.get_files_at(_LOGFILESPATH)
 	if files.size() > 4:
 		DirAccess.remove_absolute(_LOGFILESPATH + files[files.size()-1])
-#endregion
-
-
-#region Configuration file handling and creation
-const _CONFIGFOLDERNAME  : String = "BonionFileUtils_configs"
-const _CONFIGFOLDERPATH  : String = "user://" + _CONFIGFOLDERNAME
-const _CONFIGFILESPATH   : String = _CONFIGFOLDERPATH + "/"
-
-const _SYSTEMSETTINGSFILENAME : String = "systemsettings.json"
-
-
 #endregion
