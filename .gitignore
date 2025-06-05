@@ -13,10 +13,3 @@ export_presets.cfg
 .mono/
 data_*/
 mono_crash.*.json
-
-#Stuff I use to test, but you don't need
-.editorconfig
-icon.svg
-icon.svg.import
-project.godot
-*.tscn
