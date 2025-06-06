@@ -1,6 +1,6 @@
 class_name BonionLoggingUtils extends GDScript
 
-const _PERSISTENTPATH  : String = "user://persistent.bonion"
+const _PERSISTENTPATH  : String = "user://BonionLoggingUtils/BonionLoggingUtils_config.json"
 var _file              : FileAccess
 
 func _notification(what: int) -> void:
