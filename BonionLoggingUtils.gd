@@ -31,7 +31,7 @@ func _init() -> void:
 
 #region Directory creation and checking
 
-func make_dir(path : String) -> int:
+func _make_dir(path : String) -> int:
 	var err : int = DirAccess.make_dir_absolute(path)
 	if err != OK:
 		printerr("BonionFileUtils could not create directory " + path)
@@ -40,10 +40,10 @@ func make_dir(path : String) -> int:
 		return OK
 
 
-func check_dir() -> int:
+func _check_dir() -> int:
 	var exists : bool = DirAccess.dir_exists_absolute(_LOGFOLDERPATH)
 	if !exists:
-		return make_dir(_LOGFOLDERPATH)
+		return _make_dir(_LOGFOLDERPATH)
 	else:
 		return OK
 #endregion
