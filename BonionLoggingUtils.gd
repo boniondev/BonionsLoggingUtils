@@ -34,7 +34,7 @@ func _init() -> void:
 func _make_dir(path : String) -> int:
 	var err : int = DirAccess.make_dir_absolute(path)
 	if err != OK:
-		printerr("BonionFileUtils could not create directory " + path)
+		printerr("BonionLoggingUtils could not create directory " + path)
 		return err
 	else:
 		return OK
@@ -50,7 +50,7 @@ func _check_dir() -> int:
 
 
 #region Logging
-const      _LOGFOLDERNAME              : String = "BonionFileUtils_logs"
+const      _LOGFOLDERNAME              : String = "BonionLoggingUtils_logs"
 const      _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
 const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
 var        _MAXLOGFILES                : int    = 5
@@ -101,7 +101,7 @@ func add_log(contents : String, severity : int) -> void:
 	if _file == null:
 		_file = FileAccess.open(path,FileAccess.WRITE)
 	if _file == null:
-		printerr("BonionFileUtils could not write to " + path)
+		printerr("BonionLoggingUtils could not write to " + path)
 		return
 	else:
 		_file.store_string(str(Time.get_ticks_msec()) + "|")
