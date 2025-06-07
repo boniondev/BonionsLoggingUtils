@@ -1,6 +1,6 @@
 class_name BonionLoggingUtils extends GDScript
 
-const _PERSISTENTPATH  : String = "user://BonionLoggingUtils/BonionLoggingUtils_config.json"
+const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
 var _file              : FileAccess
 
 func _notification(what: int) -> void:
@@ -53,7 +53,7 @@ func _check_dir() -> int:
 const      _LOGFOLDERNAME              : String = "BonionLoggingUtils_logs"
 const      _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
 const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
-var        _MAXLOGFILES                : int    = 5 + 1
+var        _MAXLOGFILES                : int    = 5
 static var _AUTOSAVEONEXIT             : bool
 
 func setMAXLOGFILES(number : int) -> void:
