@@ -54,7 +54,7 @@ const      _LOGFOLDERNAME              : String = "BonionLoggingUtils_logs"
 const      _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
 const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
 var        _MAXLOGFILES                : int    = 5
-static var _AUTOSAVEONEXIT             : bool
+static var _AUTOSAVEONEXIT             : bool   = true
 
 func setMAXLOGFILES(number : int) -> void:
 	_MAXLOGFILES = number
