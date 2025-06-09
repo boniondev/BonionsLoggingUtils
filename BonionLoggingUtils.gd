@@ -11,23 +11,20 @@ func _notification(what: int) -> void:
 func _init() -> void:
 	var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE)
 	if persistentfile != null:
-		var notfound : bool = true
-		while persistentfile.get_position() < persistentfile.get_length():
-			var dict : = persistentfile.get_var() as Dictionary
-			if dict:
-				if dict.get("NAME") == "LOG":
-					_MAXLOGFILES = dict.get_or_add("MAXLOGFILES", 5)
-					notfound = false
-					_AUTOSAVEONEXIT = dict.get_or_add("AUTOSAVEONEXIT", true)
-					break
-		if notfound:
-			var dict : Dictionary = {
-				"NAME"          : "LOG",
-				"MAXLOGFILES"   :     5,
-				"AUTOSAVEONEXIT":  true,
-			}
-			persistentfile.store_var(dict)
-	persistentfile.close()
+		@warning_ignore("unsafe_cast")
+		var configdata : Dictionary = JSON.parse_string(persistentfile.get_as_text()) as Dictionary
+		_MAXLOGFILES    = configdata.get_or_add("MAXLOGFILES" , 5)
+		_AUTOSAVEONEXIT = configdata.get_or_add("AUTOSAVEONEXIT", true)
+		persistentfile.close()
+	else:
+		persistentfile = FileAccess.open(_PERSISTENTPATH, FileAccess.WRITE)
+		var configdata : Dictionary = {
+			"MAXLOGFILES" : 5,
+			"AUTOSAVEONEXIT" : true
+		}
+		persistentfile.store_string(JSON.stringify(configdata, "\t"))
+		persistentfile.close()
+
 
 #region Directory creation and checking
 
