@@ -1,6 +1,6 @@
 class_name BonionLoggingUtils extends GDScript
 
-const _PERSISTENTPATH  : String = "user://persistent.bonion"
+const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
 var _file              : FileAccess
 
 func _notification(what: int) -> void:
@@ -11,50 +11,48 @@ func _notification(what: int) -> void:
 func _init() -> void:
 	var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE)
 	if persistentfile != null:
-		var notfound : bool = true
-		while persistentfile.get_position() < persistentfile.get_length():
-			var dict : = persistentfile.get_var() as Dictionary
-			if dict:
-				if dict.get("NAME") == "LOG":
-					_MAXLOGFILES = dict.get_or_add("MAXLOGFILES", 5)
-					notfound = false
-					_AUTOSAVEONEXIT = dict.get_or_add("AUTOSAVEONEXIT", true)
-					break
-		if notfound:
-			var dict : Dictionary = {
-				"NAME"          : "LOG",
-				"MAXLOGFILES"   :     5,
-				"AUTOSAVEONEXIT":  true,
-			}
-			persistentfile.store_var(dict)
-	persistentfile.close()
+		@warning_ignore("unsafe_cast")
+		var configdata : Dictionary = JSON.parse_string(persistentfile.get_as_text()) as Dictionary
+		_MAXLOGFILES    = configdata.get_or_add("MAXLOGFILES" , 5)
+		_AUTOSAVEONEXIT = configdata.get_or_add("AUTOSAVEONEXIT", true)
+		persistentfile.close()
+	else:
+		persistentfile = FileAccess.open(_PERSISTENTPATH, FileAccess.WRITE)
+		var configdata : Dictionary = {
+			"MAXLOGFILES" : 5,
+			"AUTOSAVEONEXIT" : true
+		}
+		persistentfile.store_string(JSON.stringify(configdata, "\t"))
+		persistentfile.close()
+		_check_dir()
+
 
 #region Directory creation and checking
 
-func make_dir(path : String) -> int:
+func _make_dir(path : String) -> int:
 	var err : int = DirAccess.make_dir_absolute(path)
 	if err != OK:
-		printerr("BonionFileUtils could not create directory " + path)
+		printerr("BonionLoggingUtils could not create directory " + path)
 		return err
 	else:
 		return OK
 
 
-func check_dir() -> int:
+func _check_dir() -> int:
 	var exists : bool = DirAccess.dir_exists_absolute(_LOGFOLDERPATH)
 	if !exists:
-		return make_dir(_LOGFOLDERPATH)
+		return _make_dir(_LOGFOLDERPATH)
 	else:
 		return OK
 #endregion
 
 
 #region Logging
-const      _LOGFOLDERNAME              : String = "BonionFileUtils_logs"
+const      _LOGFOLDERNAME              : String = "BonionLoggingUtils_logs"
 const      _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
 const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
 var        _MAXLOGFILES                : int    = 5
-static var _AUTOSAVEONEXIT             : bool
+static var _AUTOSAVEONEXIT             : bool   = true
 
 func setMAXLOGFILES(number : int) -> void:
 	_MAXLOGFILES = number
@@ -100,9 +98,9 @@ func add_log(contents : String, severity : int) -> void:
 		_sortlogs()
 	if _file == null:
 		_file = FileAccess.open(path,FileAccess.WRITE)
-	if _file == null:
-		printerr("BonionFileUtils could not write to " + path)
-		return
+		if _file == null:
+			printerr("BonionLoggingUtils could not write to " + path)
+			return
 	else:
 		_file.store_string(str(Time.get_ticks_msec()) + "|")
 		_file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
