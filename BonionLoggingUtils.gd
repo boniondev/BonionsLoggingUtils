@@ -1,14 +1,17 @@
 class_name BonionLoggingUtils extends GDScript
 
 const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
-var _file              : FileAccess
+var buffer             : String
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		if _file != null and _AUTOSAVEONEXIT:
-			_file.close()
+		if buffer != null and _AUTOSAVEONEXIT:
+			var file = FileAccess.open(_LOGFILESPATH + "latest.log", FileAccess.WRITE_READ)
+			file.store_string(buffer)
+			file.close()
 
 func _init() -> void:
+	_sortlogs()
 	var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE)
 	if persistentfile != null:
 		@warning_ignore("unsafe_cast")
@@ -85,34 +88,26 @@ func setAUTOSAVE(value : bool) -> bool:
 
 ## Writes the current log buffer to disk. You don't need to call this method unless you turn off autosave.
 func save_log() -> bool:
-	if _file != null:
-		_file.flush()
-		return true
-	else:
-		return false
+	var file = FileAccess.open(_LOGFILESPATH + "latest.log", FileAccess.WRITE_READ)
+	file.store_string(buffer)
+	file.close()
+	return true
 
 ## @experimental
 func add_log(contents : String, severity : int) -> void:
-	var path : String = _LOGFILESPATH + "latest.log"
-	if FileAccess.file_exists(path):
-		_sortlogs()
-	if _file == null:
-		_file = FileAccess.open(path,FileAccess.WRITE)
-		if _file == null:
-			printerr("BonionLoggingUtils could not write to " + path)
-			return
-	else:
-		_file.store_string(str(Time.get_ticks_msec()) + "|")
-		_file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
-		_file.store_string(_LOGSEVERITYDICT.get(severity) + "|")
-		_file.store_string(contents)
-		_file.store_string("\n")
+	buffer = buffer + str(Time.get_ticks_msec()) + "|"
+	buffer = buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
+	buffer = buffer + _LOGSEVERITYDICT.get(severity) + "|"
+	buffer = buffer + contents
+	buffer = buffer + "\n"
 
 func _sortlogs() -> void:
 	var files : PackedStringArray = DirAccess.get_files_at(_LOGFILESPATH)
 	var pathtolatest : String = _LOGFILESPATH + "latest.log"
 	if files.size() > 0 and files.has("latest.log"):
-		DirAccess.rename_absolute(pathtolatest, _LOGFILESPATH + Time.get_time_string_from_unix_time(FileAccess.get_modified_time(pathtolatest)))
+		var err : Error = DirAccess.rename_absolute(pathtolatest, _LOGFILESPATH + "bonionlog" + str(files.size()) + ".log")
+		print(str(pathtolatest))
+		print(error_string(err))
 	files = DirAccess.get_files_at(_LOGFILESPATH)
 	if files.size() > 4:
 		DirAccess.remove_absolute(_LOGFILESPATH + files[files.size()-1])
