@@ -24,6 +24,7 @@ func _init() -> void:
 		}
 		persistentfile.store_string(JSON.stringify(configdata, "\t"))
 		persistentfile.close()
+		_check_dir()
 
 
 #region Directory creation and checking
