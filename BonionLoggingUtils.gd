@@ -98,9 +98,9 @@ func add_log(contents : String, severity : int) -> void:
 		_sortlogs()
 	if _file == null:
 		_file = FileAccess.open(path,FileAccess.WRITE)
-	if _file == null:
-		printerr("BonionLoggingUtils could not write to " + path)
-		return
+		if _file == null:
+			printerr("BonionLoggingUtils could not write to " + path)
+			return
 	else:
 		_file.store_string(str(Time.get_ticks_msec()) + "|")
 		_file.store_string("[" + Time.get_time_string_from_system() + "]" + "|")
