@@ -113,11 +113,12 @@ func add_log(contents : String, severity : int) -> void:
 func _sortlogs() -> void:
 	var files : PackedStringArray = DirAccess.get_files_at(_LOGFILESPATH)
 	var pathtolatest : String = _LOGFILESPATH + "latest.log"
+	if files.size() > 4:
+		DirAccess.remove_absolute(_LOGFILESPATH + files[0])
 	if files.size() > 0 and files.has("latest.log"):
 		var err : Error = DirAccess.rename_absolute(pathtolatest, _LOGFILESPATH + "bonionlog" + Time.get_datetime_string_from_system().replace(":", ".") + ".log")
 		print(pathtolatest + "\n", _LOGFILESPATH + "bonionlog" + Time.get_datetime_string_from_system() + ".log")
 		print(error_string(err))
 	files = DirAccess.get_files_at(_LOGFILESPATH)
-	if files.size() > 4:
-		DirAccess.remove_absolute(_LOGFILESPATH + files[files.size()-1])
+
 #endregion
