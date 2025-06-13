@@ -1,13 +1,13 @@
 class_name BonionLoggingUtils extends GDScript
 
 const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
-var buffer             : String
+var _buffer            : String
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		if buffer != null and _AUTOSAVEONEXIT:
+		if _buffer != null and _buffer != "" and _AUTOSAVEONEXIT:
 			var file = FileAccess.open(_LOGFILESPATH + "latest.log", FileAccess.WRITE_READ)
-			file.store_string(buffer)
+			file.store_string(_buffer)
 			file.close()
 
 func _init() -> void:
@@ -89,17 +89,18 @@ func setAUTOSAVE(value : bool) -> bool:
 ## Writes the current log buffer to disk. You don't need to call this method unless you turn off autosave.
 func save_log() -> bool:
 	var file = FileAccess.open(_LOGFILESPATH + "latest.log", FileAccess.WRITE_READ)
-	file.store_string(buffer)
+	file.store_string(_buffer)
 	file.close()
+	_buffer = ""
 	return true
 
 ## @experimental
 func add_log(contents : String, severity : int) -> void:
-	buffer = buffer + str(Time.get_ticks_msec()) + "|"
-	buffer = buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
-	buffer = buffer + _LOGSEVERITYDICT.get(severity) + "|"
-	buffer = buffer + contents
-	buffer = buffer + "\n"
+	_buffer = _buffer + str(Time.get_ticks_msec()) + "|"
+	_buffer = _buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
+	_buffer = _buffer + _LOGSEVERITYDICT.get(severity) + "|"
+	_buffer = _buffer + contents
+	_buffer = _buffer + "\n"
 
 func _sortlogs() -> void:
 	var files : PackedStringArray = DirAccess.get_files_at(_LOGFILESPATH)
