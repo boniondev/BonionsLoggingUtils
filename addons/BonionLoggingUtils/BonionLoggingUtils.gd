@@ -115,6 +115,8 @@ func _sortlogs() -> void:
 	var pathtolatest : String = _LOGFILESPATH + "latest.log"
 	if files.size() > 0 and files.has("latest.log"):
 		var err : Error = DirAccess.rename_absolute(pathtolatest, _LOGFILESPATH + "bonionlog" + Time.get_datetime_string_from_system() + ".log")
+		print(pathtolatest + "\n", _LOGFILESPATH + "bonionlog" + Time.get_datetime_string_from_system() + ".log")
+		print(error_string(err))
 	files = DirAccess.get_files_at(_LOGFILESPATH)
 	if files.size() > 4:
 		DirAccess.remove_absolute(_LOGFILESPATH + files[files.size()-1])

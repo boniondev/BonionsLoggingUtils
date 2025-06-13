@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="BonionLoggingUtils"
-run/main_scene="uid://d0d2wfskfu5ui"
+run/main_scene="uid://dyrfe12b157j0"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
