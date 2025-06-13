@@ -1,5 +1,7 @@
 class_name BonionLoggingUtils extends GDScript
 
+## A class used to print logs. Must be instantiated by using [method GDScript.new] to be used.
+
 const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
 var _buffer            : String
 
@@ -70,7 +72,7 @@ enum LOGSEVERITY {
 	WARNING,
 	## Events that may or may not affect the proper execution of the game.
 	ALERT,
-	## Catastrophic events that stop the execution of the game in its tracks. 
+	## Catastrophic events that stop the execution of the game in its tracks.[br]
 	##Use this to inform yourself or the player what went wrong if you make it so the game closes. 
 	ERROR
 }
@@ -82,13 +84,13 @@ var _LOGSEVERITYDICT : Dictionary = {
 	LOGSEVERITY.ERROR   : "ERROR",
 }
 
-## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish. 
-##Remember to use [method save_log] if you disable autosaving.
+## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish.[br]
+## Remember to use [method save_log] if you disable autosaving.
 func setAUTOSAVE(value : bool) -> bool:
 	_AUTOSAVEONEXIT = value
 	return _AUTOSAVEONEXIT
 
-## Writes the current log buffer to disk. You don't need to call this method unless you turn off autosave.
+## Writes the current log buffer to disk. You don't need to call this method unless you turn off autosaving.
 func save_log() -> bool:
 	var file = FileAccess.open(_LOGFILESPATH + "latest.log", FileAccess.WRITE_READ)
 	file.store_string(_buffer)
@@ -96,7 +98,7 @@ func save_log() -> bool:
 	_buffer = ""
 	return true
 
-## @experimental
+## Adds a log to the buffer. Log text prints the milliseconds since the engine started, the current time, the severity of the log, and the contents.
 func add_log(contents : String, severity : int) -> void:
 	_buffer = _buffer + str(Time.get_ticks_msec()) + "|"
 	_buffer = _buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
