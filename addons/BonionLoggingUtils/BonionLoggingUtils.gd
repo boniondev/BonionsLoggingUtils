@@ -57,8 +57,8 @@ const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
 var        _MAXLOGFILES                : int    = 5
 static var _AUTOSAVEONEXIT             : bool   = true
 
-func setMAXLOGFILES(number : int) -> void:
-	_MAXLOGFILES = number
+#func setMAXLOGFILES(number : int) -> void:
+	#_MAXLOGFILES = number
 
 ## Varying levels of log severities, along with guidelines as to how and when to use them.
 enum LOGSEVERITY {
