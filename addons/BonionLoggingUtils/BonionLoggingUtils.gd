@@ -70,7 +70,8 @@ enum LOGSEVERITY {
 	WARNING,
 	## Events that may or may not affect the proper execution of the game.
 	ALERT,
-	## Catastrophic events that stop the execution of the game in its tracks. Use this to inform yourself or the player what went wrong if you make it so the game closes. 
+	## Catastrophic events that stop the execution of the game in its tracks. 
+	##Use this to inform yourself or the player what went wrong if you make it so the game closes. 
 	ERROR
 }
 var _LOGSEVERITYDICT : Dictionary = {
@@ -81,7 +82,8 @@ var _LOGSEVERITYDICT : Dictionary = {
 	LOGSEVERITY.ERROR   : "ERROR",
 }
 
-## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish. Remember to use [method save_log] if you disable autosaving
+## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish. 
+##Remember to use [method save_log] if you disable autosaving.
 func setAUTOSAVE(value : bool) -> bool:
 	_AUTOSAVEONEXIT = value
 	return _AUTOSAVEONEXIT
