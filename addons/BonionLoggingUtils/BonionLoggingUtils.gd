@@ -1,6 +1,10 @@
 class_name BonionLoggingUtils extends GDScript
 
-## A class used to print logs. Must be instantiated by using [method GDScript.new] to be used.
+## A class used to print logs. Must be instantiated by using [method GDScript.new] to be used.[br]
+## Logs will be stored in user://BonionLoggingUtils_logs/.[br]
+## This class also creates and uses user://BonionLoggingUtils_config.json
+## to determine how many logs it will keep stored before deleting the oldest one
+## and whether to require manual saving or to save upon exit.
 
 const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
 var _buffer            : String
@@ -98,7 +102,7 @@ func save_log() -> bool:
 	_buffer = ""
 	return true
 
-## Adds a log to the buffer. Log text prints the milliseconds since the engine started, the current time, the severity of the log, and the contents.
+## Adds a log to the buffer. Log text prints the milliseconds since the engine started, the current time, the [param severity] of the log, and the [param contents].
 func add_log(contents : String, severity : int) -> void:
 	_buffer = _buffer + str(Time.get_ticks_msec()) + "|"
 	_buffer = _buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
