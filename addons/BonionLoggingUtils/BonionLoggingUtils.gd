@@ -63,6 +63,7 @@ func _update_json(index : int, value : Variant) -> void:
 			configdata.set("printTIME", value)
 	persistentfile.seek(0)
 	persistentfile.store_string(JSON.stringify(configdata))
+	persistentfile.close()
 
 #region Directory creation and checking
 
