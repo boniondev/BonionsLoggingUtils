@@ -101,11 +101,17 @@ var _LOGSEVERITYDICT : Dictionary = {
 
 ## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish.[br]
 ## Remember to use [method save_log] if you disable autosaving.
-func setAUTOSAVEONEXIT(value : bool) -> void:
+func setAUTOSAVEONEXIT(value : bool, save : bool = false) -> void:
 	_AUTOSAVEONEXIT = value
 
-func setMAXLOGFILES(number : int) -> void:
+func setMAXLOGFILES(number : int, save : bool = false) -> void:
 	_MAXLOGFILES = number
+
+func set_printTICKSMSEC(value : bool, save : bool = false) -> void:
+	_printTICKSMSEC = value
+
+func set_printTIME(value : bool, save : bool = false) -> void:
+	_printTIME = value
 
 #endregion
 
