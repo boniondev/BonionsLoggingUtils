@@ -63,8 +63,8 @@ func _check_dir() -> int:
 const      _LOGFOLDERNAME              : String = "BonionLoggingUtils_logs"
 const      _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
 const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
-var        _MAXLOGFILES                : int    = 5
 static var _AUTOSAVEONEXIT             : bool   = true
+var        _MAXLOGFILES                : int    = 5
 
 func setMAXLOGFILES(number : int) -> void:
 	_MAXLOGFILES = number
