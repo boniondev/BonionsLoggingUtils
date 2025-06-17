@@ -22,7 +22,6 @@ func _notification(what: int) -> void:
 			file.close()
 
 func _init() -> void:
-	_sortlogs()
 	var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE)
 	if persistentfile != null:
 		@warning_ignore("unsafe_cast")
@@ -43,6 +42,7 @@ func _init() -> void:
 		persistentfile.store_string(JSON.stringify(configdata, "\t"))
 		persistentfile.close()
 		_check_dir()
+	_sortlogs()
 
 
 #region Directory creation and checking
