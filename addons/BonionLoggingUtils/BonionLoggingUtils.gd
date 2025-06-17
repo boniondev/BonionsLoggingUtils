@@ -120,22 +120,29 @@ var _LOGSEVERITYDICT : Dictionary = {
 #region Setters
 
 ## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish.[br]
-## Remember to use [method save_log] if you disable autosaving.
+## Remember to use [method save_log] if you disable autosaving.[br]
+## Set save to [code]true[/code] if you wish to enable this globally.
 func setAUTOSAVEONEXIT(value : bool, save : bool = false) -> void:
 	_AUTOSAVEONEXIT = value
 	if save:
 		_update_json(_JSONINDEX.AUTOSAVEONEXIT, value)
 
+## Change the number of maximum log files.[br]
+## Set save to [code]true[/code] if you wish to enable this globally.
 func setMAXLOGFILES(number : int, save : bool = false) -> void:
 	_MAXLOGFILES = number
 	if save:
 		_update_json(_JSONINDEX.MAXLOGFILES, number)
 
+## Change whether or not to print the milliseconds since the engine started in the log.[br]
+## Set save to [code]true[/code] if you wish to enable this globally.
 func set_printTICKSMSEC(value : bool, save : bool = false) -> void:
 	_printTICKSMSEC = value
 	if save:
 		_update_json(_JSONINDEX.printTICKSMSEC, value)
 
+## Change whether or not to print the current time in the log.[br]
+## Set save to [code]true[/code] if you wish to enable this globally.
 func set_printTIME(value : bool, save : bool = false) -> void:
 	_printTIME = value
 	if save:
