@@ -101,7 +101,7 @@ var _LOGSEVERITYDICT : Dictionary = {
 
 ## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish.[br]
 ## Remember to use [method save_log] if you disable autosaving.
-func setAUTOSAVE(value : bool) -> bool:
+func setAUTOSAVEONEXIT(value : bool) -> bool:
 	_AUTOSAVEONEXIT = value
 	return _AUTOSAVEONEXIT
 
