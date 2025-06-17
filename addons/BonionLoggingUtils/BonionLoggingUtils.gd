@@ -7,8 +7,8 @@ class_name BonionLoggingUtils extends GDScript
 ## - MAXLOGFILES: When the number of logs goes past this number,
 ## the oldest one is deleted before making a new one.[br]
 ## - AUTOSAVEONEXIT: If this is true, the log will only be saved before the instantiated object of this class
-## dereferenced, deleted, or freed from memory in any way.
-## - printTICKS: Whether to print the current ticks since the engine started when printing the log.
+## dereferenced, deleted, or freed from memory in any way.[br]
+## - printTICKS: Whether to print the current ticks since the engine started when printing the log.[br]
 
 const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
 var _buffer            : String
