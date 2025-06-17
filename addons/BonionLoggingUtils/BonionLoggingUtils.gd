@@ -33,8 +33,8 @@ func _init() -> void:
 	else:
 		persistentfile = FileAccess.open(_PERSISTENTPATH, FileAccess.WRITE)
 		var configdata : Dictionary = {
-			"MAXLOGFILES" : 5,
-			"AUTOSAVEONEXIT" : true
+			"MAXLOGFILES"    : 5,
+			"AUTOSAVEONEXIT" : true,
 			"printTICKS"     : true,
 		}
 		persistentfile.store_string(JSON.stringify(configdata, "\t"))
