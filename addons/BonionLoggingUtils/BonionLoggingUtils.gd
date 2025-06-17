@@ -43,6 +43,26 @@ func _init() -> void:
 		_check_dir()
 	_sortlogs()
 
+enum _JSONINDEX {
+	MAXLOGFILES,
+	AUTOSAVEONEXIT,
+	printTICKSMSEC,
+	printTIME,
+}
+func _update_json(index : int, value : Variant) -> void:
+	var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE) 
+	var configdata : Dictionary = JSON.parse_string(persistentfile.get_as_text()) as Dictionary
+	match index:
+		_JSONINDEX.MAXLOGFILES:
+			configdata.set("MAXLOGFILES", value)
+		_JSONINDEX.AUTOSAVEONEXIT:
+			configdata.set("AUTOSAVEONEXIT", value)
+		_JSONINDEX.printTICKSMSEC:
+			configdata.set("printTICKSMSEC", value)
+		_JSONINDEX.printTIME:
+			configdata.set("printTIME", value)
+	persistentfile.seek(0)
+	persistentfile.store_string(JSON.stringify(configdata))
 
 #region Directory creation and checking
 
