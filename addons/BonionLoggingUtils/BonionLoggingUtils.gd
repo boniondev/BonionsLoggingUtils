@@ -74,8 +74,6 @@ var        _MAXLOGFILES                : int    = 5
 var        _printTICKSMSEC             : bool   = true
 var        _printTIME                  : bool   = true
 
-func setMAXLOGFILES(number : int) -> void:
-	_MAXLOGFILES = number
 
 ## Varying levels of log severities, along with guidelines as to how and when to use them.
 enum LOGSEVERITY {
@@ -99,11 +97,18 @@ var _LOGSEVERITYDICT : Dictionary = {
 	LOGSEVERITY.ERROR   : "ERROR",
 }
 
+#region Setters
+
 ## The logger will save to disk before it gets deleted from memory, but you may disable it if you wish.[br]
 ## Remember to use [method save_log] if you disable autosaving.
 func setAUTOSAVEONEXIT(value : bool) -> bool:
 	_AUTOSAVEONEXIT = value
 	return _AUTOSAVEONEXIT
+
+func setMAXLOGFILES(number : int) -> void:
+	_MAXLOGFILES = number
+
+#endregion
 
 ## Writes the current log buffer to disk. You don't need to call this method unless you turn off autosaving.
 func save_log() -> bool:
