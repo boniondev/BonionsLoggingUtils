@@ -24,7 +24,6 @@ func _notification(what: int) -> void:
 func _init() -> void:
 	var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE)
 	if persistentfile != null:
-		@warning_ignore("unsafe_cast")
 		var configdata : Dictionary = JSON.parse_string(persistentfile.get_as_text()) as Dictionary
 		_MAXLOGFILES    = configdata.get_or_add("MAXLOGFILES" , 5)
 		_AUTOSAVEONEXIT = configdata.get_or_add("AUTOSAVEONEXIT", true)
