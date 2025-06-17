@@ -8,6 +8,7 @@ class_name BonionLoggingUtils extends GDScript
 ## the oldest one is deleted before making a new one.[br]
 ## - AUTOSAVEONEXIT: If this is true, the log will only be saved before the instantiated object of this class
 ## dereferenced, deleted, or freed from memory in any way.
+## - printTICKS: Whether to print the current ticks since the engine started when printing the log.
 
 const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
 var _buffer            : String
@@ -27,12 +28,14 @@ func _init() -> void:
 		var configdata : Dictionary = JSON.parse_string(persistentfile.get_as_text()) as Dictionary
 		_MAXLOGFILES    = configdata.get_or_add("MAXLOGFILES" , 5)
 		_AUTOSAVEONEXIT = configdata.get_or_add("AUTOSAVEONEXIT", true)
+		_printTICKS     = configdata.get_or_add("printTICKS", true)
 		persistentfile.close()
 	else:
 		persistentfile = FileAccess.open(_PERSISTENTPATH, FileAccess.WRITE)
 		var configdata : Dictionary = {
 			"MAXLOGFILES" : 5,
 			"AUTOSAVEONEXIT" : true
+			"printTICKS"     : true,
 		}
 		persistentfile.store_string(JSON.stringify(configdata, "\t"))
 		persistentfile.close()
@@ -65,6 +68,7 @@ const      _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
 const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
 static var _AUTOSAVEONEXIT             : bool   = true
 var        _MAXLOGFILES                : int    = 5
+var        _printTICKS                 : bool   = true
 
 func setMAXLOGFILES(number : int) -> void:
 	_MAXLOGFILES = number
@@ -107,7 +111,8 @@ func save_log() -> bool:
 
 ## Adds a log to the buffer. Log text prints the milliseconds since the engine started, the current time, the [param severity] of the log, and the [param contents].
 func add_log(contents : String, severity : int) -> void:
-	_buffer = _buffer + str(Time.get_ticks_msec()) + "|"
+	if _printTICKS:
+		_buffer = _buffer + str(Time.get_ticks_msec()) + "|"
 	_buffer = _buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
 	_buffer = _buffer + _LOGSEVERITYDICT.get(severity) + "|"
 	_buffer = _buffer + contents
