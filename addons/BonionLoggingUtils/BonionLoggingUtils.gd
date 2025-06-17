@@ -63,8 +63,8 @@ const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
 var        _MAXLOGFILES                : int    = 5
 var        _AUTOSAVEONEXIT             : bool   = true
 
-#func setMAXLOGFILES(number : int) -> void:
-	#_MAXLOGFILES = number
+func setMAXLOGFILES(number : int) -> void:
+	_MAXLOGFILES = number
 
 ## Varying levels of log severities, along with guidelines as to how and when to use them.
 enum LOGSEVERITY {
@@ -113,7 +113,7 @@ func add_log(contents : String, severity : int) -> void:
 func _sortlogs() -> void:
 	var files : PackedStringArray = DirAccess.get_files_at(_LOGFILESPATH)
 	var pathtolatest : String = _LOGFILESPATH + "latest.log"
-	if files.size() > 4:
+	if files.size() == _MAXLOGFILES:
 		DirAccess.remove_absolute(_LOGFILESPATH + files[0])
 	if files.size() > 0 and files.has("latest.log"):
 		var err : Error = DirAccess.rename_absolute(pathtolatest, _LOGFILESPATH + "bonionlog" + Time.get_datetime_string_from_system().replace(":", ".") + ".log")
