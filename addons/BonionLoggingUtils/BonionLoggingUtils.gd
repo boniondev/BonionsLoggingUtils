@@ -123,15 +123,23 @@ var _LOGSEVERITYDICT : Dictionary = {
 ## Remember to use [method save_log] if you disable autosaving.
 func setAUTOSAVEONEXIT(value : bool, save : bool = false) -> void:
 	_AUTOSAVEONEXIT = value
+	if save:
+		_update_json(_JSONINDEX.AUTOSAVEONEXIT, value)
 
 func setMAXLOGFILES(number : int, save : bool = false) -> void:
 	_MAXLOGFILES = number
+	if save:
+		_update_json(_JSONINDEX.MAXLOGFILES, number)
 
 func set_printTICKSMSEC(value : bool, save : bool = false) -> void:
 	_printTICKSMSEC = value
+	if save:
+		_update_json(_JSONINDEX.printTICKSMSEC, value)
 
 func set_printTIME(value : bool, save : bool = false) -> void:
 	_printTIME = value
+	if save:
+		_update_json(_JSONINDEX.printTIME, value)
 
 #endregion
 
