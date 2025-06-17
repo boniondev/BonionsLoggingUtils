@@ -3,8 +3,11 @@ class_name BonionLoggingUtils extends GDScript
 ## A class used to print logs. Must be instantiated by using [method GDScript.new] to be used.[br]
 ## Logs will be stored in user://BonionLoggingUtils_logs/.[br]
 ## This class also creates and uses user://BonionLoggingUtils_config.json
-## to determine how many logs it will keep stored before deleting the oldest one
-## and whether to require manual saving or to save upon exit.
+## to store and retrieve the following data:[br]
+## - MAXLOGFILES: When the number of logs goes past this number,
+## the oldest one is deleted before making a new one.[br]
+## - AUTOSAVEONEXIT: If this is true, the log will only be saved before the instantiated object of this class
+## dereferenced, deleted, or freed from memory in any way.
 
 const _PERSISTENTPATH  : String = "user://BonionLoggingUtils_config.json"
 var _buffer            : String
