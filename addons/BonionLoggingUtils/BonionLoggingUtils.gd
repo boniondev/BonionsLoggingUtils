@@ -37,7 +37,7 @@ func _init() -> void:
 		var configdata : Dictionary = {
 			"MAXLOGFILES"    : 5,
 			"AUTOSAVEONEXIT" : true,
-			"printTICKSMSEC"     : true,
+			"printTICKSMSEC" : true,
 			"printTIME"      : true,
 		}
 		persistentfile.store_string(JSON.stringify(configdata, "\t"))
