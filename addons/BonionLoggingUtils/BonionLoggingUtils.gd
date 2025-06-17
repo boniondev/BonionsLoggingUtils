@@ -28,14 +28,14 @@ func _init() -> void:
 		var configdata : Dictionary = JSON.parse_string(persistentfile.get_as_text()) as Dictionary
 		_MAXLOGFILES    = configdata.get_or_add("MAXLOGFILES" , 5)
 		_AUTOSAVEONEXIT = configdata.get_or_add("AUTOSAVEONEXIT", true)
-		_printTICKS     = configdata.get_or_add("printTICKS", true)
+		_printTICKSMSEC = configdata.get_or_add("printTICKSMSEC", true)
 		persistentfile.close()
 	else:
 		persistentfile = FileAccess.open(_PERSISTENTPATH, FileAccess.WRITE)
 		var configdata : Dictionary = {
 			"MAXLOGFILES"    : 5,
 			"AUTOSAVEONEXIT" : true,
-			"printTICKS"     : true,
+			"printTICKSMSEC"     : true,
 		}
 		persistentfile.store_string(JSON.stringify(configdata, "\t"))
 		persistentfile.close()
@@ -68,7 +68,7 @@ const      _LOGFOLDERPATH              : String = "user://" + _LOGFOLDERNAME
 const      _LOGFILESPATH               : String = _LOGFOLDERPATH + "/"
 static var _AUTOSAVEONEXIT             : bool   = true
 var        _MAXLOGFILES                : int    = 5
-var        _printTICKS                 : bool   = true
+var        _printTICKSMSEC             : bool   = true
 
 func setMAXLOGFILES(number : int) -> void:
 	_MAXLOGFILES = number
@@ -111,7 +111,7 @@ func save_log() -> bool:
 
 ## Adds a log to the buffer. Log text prints the milliseconds since the engine started, the current time, the [param severity] of the log, and the [param contents].
 func add_log(contents : String, severity : int) -> void:
-	if _printTICKS:
+	if _printTICKSMSEC:
 		_buffer = _buffer + str(Time.get_ticks_msec()) + "|"
 	_buffer = _buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
 	_buffer = _buffer + _LOGSEVERITYDICT.get(severity) + "|"
