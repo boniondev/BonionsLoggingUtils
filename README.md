@@ -1,4 +1,4 @@
-# BonionsFileUtils
+# BonionsLoggingUtils
  
 A Godot addon for custom logs released under the MIT license.<br/>
 Current features:
