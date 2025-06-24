@@ -9,3 +9,5 @@ Current features:
 - Automatic saving upon exit
 
 Instructions on usage can be found in the documentation comments of the file.
+
+For use in Godot, you can find it in the Godot Asset Library [here](https://godotengine.org/asset-library/asset/4108).
