@@ -10,4 +10,4 @@ Current features:
 
 Instructions on usage can be found in the documentation comments of the file.
 
-For use in Godot, you can find it in the Godot Asset Library [here](https://godotengine.org/asset-library/asset/4108).
+You can find the latest version in the Godot Asset Library [here](https://godotengine.org/asset-library/asset/4108), or download older versions from the "Releases" section.
