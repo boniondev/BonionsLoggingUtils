@@ -7,6 +7,7 @@ Current features:
 - Toggleable features (Current engine milliseconds, time), saving and subsequent loading of such configurations
 - 5 levels of log "severities"
 - Automatic saving upon exit
+- Logging level, logs below a minimum severity will be ignored
 
 Instructions on usage can be found in the documentation comments of the file.
 
