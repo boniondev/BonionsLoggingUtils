@@ -29,6 +29,7 @@ func _init() -> void:
 		_AUTOSAVEONEXIT = configdata.get_or_add("AUTOSAVEONEXIT", true)
 		_printTICKSMSEC = configdata.get_or_add("printTICKSMSEC", true)
 		_printTIME      = configdata.get_or_add("printTIME", true)
+		_logginglevel   = configdata.get_or_add("logginglevel", 0)
 		persistentfile.close()
 	else:
 		persistentfile = FileAccess.open(_PERSISTENTPATH, FileAccess.WRITE)
@@ -37,6 +38,7 @@ func _init() -> void:
 			"AUTOSAVEONEXIT" : true,
 			"printTICKSMSEC" : true,
 			"printTIME"      : true,
+			"logginglevel"   : 0,
 		}
 		persistentfile.store_string(JSON.stringify(configdata, "\t"))
 		persistentfile.close()
@@ -48,6 +50,7 @@ enum _JSONINDEX {
 	AUTOSAVEONEXIT,
 	printTICKSMSEC,
 	printTIME,
+	logginglevel,
 }
 func _update_json(index : int, value : Variant) -> void:
 	var persistentfile : FileAccess = FileAccess.open(_PERSISTENTPATH,FileAccess.READ_WRITE) 
@@ -61,6 +64,8 @@ func _update_json(index : int, value : Variant) -> void:
 			configdata.set("printTICKSMSEC", value)
 		_JSONINDEX.printTIME:
 			configdata.set("printTIME", value)
+		_JSONINDEX.logginglevel:
+			configdata.set("logginglevel", value)
 	persistentfile.seek(0)
 	persistentfile.store_string(JSON.stringify(configdata))
 	persistentfile.close()
@@ -93,6 +98,7 @@ static var _AUTOSAVEONEXIT             : bool   = true
 var        _MAXLOGFILES                : int    = 5
 var        _printTICKSMSEC             : bool   = true
 var        _printTIME                  : bool   = true
+var        _logginglevel               : int    = 0
 
 
 ## Varying levels of log severities, along with guidelines as to how and when to use them.
@@ -148,6 +154,13 @@ func set_printTIME(value : bool, save : bool = false) -> void:
 	if save:
 		_update_json(_JSONINDEX.printTIME, value)
 
+## Change the logging level. Logs under this severity will NOT be printed.[br]
+## Set save to [code]true[/code] if you wish to enable this globally.
+func set_logginglevel(value : int, save : bool = false) -> void:
+	_logginglevel = value
+	if save:
+		_update_json(_JSONINDEX.logginglevel, value)
+
 #endregion
 
 ## Writes the current log buffer to disk. You don't need to call this method unless you turn off autosaving.
@@ -160,13 +173,14 @@ func save_log() -> bool:
 
 ## Adds a log to the buffer. Log text prints the milliseconds since the engine started, the current time, the [param severity] of the log, and the [param contents].
 func add_log(contents : String, severity : int) -> void:
-	if _printTICKSMSEC:
-		_buffer = _buffer + str(Time.get_ticks_msec()) + "|"
-	if _printTIME:
-		_buffer = _buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
-	_buffer = _buffer + _LOGSEVERITYDICT.get(severity) + "|"
-	_buffer = _buffer + contents
-	_buffer = _buffer + "\n"
+	if severity >= _logginglevel:
+		if _printTICKSMSEC:
+			_buffer = _buffer + str(Time.get_ticks_msec()) + "|"
+		if _printTIME:
+			_buffer = _buffer + "[" + Time.get_time_string_from_system() + "]" + "|"
+		_buffer = _buffer + _LOGSEVERITYDICT.get(severity) + "|"
+		_buffer = _buffer + contents
+		_buffer = _buffer + "\n"
 
 func _sortlogs() -> void:
 	var files : PackedStringArray = DirAccess.get_files_at(_LOGFILESPATH)
